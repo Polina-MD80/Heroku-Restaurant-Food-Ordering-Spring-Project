@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/common::head"></head>
+
+<body>
+
+<header th:replace="fragments/common::navigation"></header>
+
+
+
+
+    <section class="food-search">
+        <div class="container-contact">
+
+            <h2 class="text-center text-dark">Fill this form to confirm your order.</h2>
+
+            <form th:action="@{/order-place}" th:method="post" th:object="${order}" class="order">
+                <fieldset>
+                    <legend>Selected Food</legend>
+
+                    <div th:each="d: ${cartDetails}" th:object="${d}" class="food-menu-desc">
+                        <h5 th:text="*{item.name}">Food Title</h5>
+                        <span th:text="*{quantity}" class="order-label">Quantity</span><span> x </span>
+                        <span th:text="*{item.price}" class="food-price">2.3</span> <span> subtotal </span>
+                        <span th:text="*{getSubTotal()}">67</span>
+                    </div>
+
+                    <div class="food-menu-desc">
+                        <h3 style="text-align: left" th:text="|Total: ${total}|"></h3>
+                    </div>
+
+                </fieldset>
+
+                <fieldset th:object="${user}">
+                    <legend>Delivery Details</legend>
+                    <div  class="order-label">Username</div>
+                    <b><span style="color: #ff6b81"  type="text" name="username" th:text="*{username}"  ></span></b>
+
+                    <div class="order-label">Phone Number</div><span>Expect our operator to call you for final confirmation</span>
+                    <input th:field="${order.phone}" type="tel" name="contact" placeholder="E.g. 0888xxxxxx /Expect a call for final confirmation" pattern="[0-9]{8,10}" maxlength="10" minlength="8" class="input-responsive" required>
+
+
+                    <div class="order-label">Email</div>
+                    <input th:field="${order.email}" type="email" name="email" th:if="${user.email != null}"   th:placeholder="*{email}" th:value="${user.email}" class="input-responsive" >
+
+                    <div class="order-label">Address</div>
+                    <textarea th:field="${order.address}" name="address" rows="10" placeholder="E.g. Street, City, Country" class="input-responsive" required></textarea>
+
+                    <input type="submit" name="submit" value="Confirm Order" class="btn btn-primary">
+                    <input type="button" id="cancelBtn" value="Cancel" class="btn btn-secondary">
+                </fieldset>
+
+            </form>
+
+        </div>
+    </section>
+
+<div class="clearfix"></div>
+
+<section th:replace="fragments/common::social"></section>
+
+<footer th:replace="fragments/common::footer"></footer>
+
+
+<script>$(document).ready(function () {
+    $("#cancelBtn").on("click", function () {
+        window.location = "[[@{/cart}]]";
+    });
+});
+</script>
+</body>
+</html>

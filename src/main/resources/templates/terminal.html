@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="/fragments/common-terminal::terminal-head"></head>
+<body>
+
+<div class="container-fluid">
+    <div th:replace="fragments/common-terminal::terminal_nav"></div>
+    <div>
+        <H4>Terminal (orders) </H4>
+        <table class="table table-bordered table-striped table-hover table-responsive-xl">
+            <div th:if="${success != null}" th:text="${success}" class="alert alert-success text-center"></div>
+            <thead class="thead-dark">
+            <tr>
+                <th>Id</th>
+                <th>Customer</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Status</th>
+                <th>Details</th>
+                <th>Time</th>
+                <th>Operate</th>
+                <th>Employee</th>
+            </tr>
+            </thead>
+            <tbody >
+            <tr th:each="o : ${orders}" th:object="${o}">
+                <td th:text="*{id}"></td>
+                <td th:text="*{customer.username}"></td>
+                <td th:text="*{email}"></td>
+                <td><a th:href="'tel:' + *{phone}" th:text="*{phone}"></a></td>
+                <td th:text="*{address}"></td>
+                <td style="color: darkred" th:text="*{status.name()}"></td>
+                <td><a class="fas fa-file-invoice-dollar fa-2x icon-dark" th:href="@{'/terminal/order/' + ${o.id}}"></a>
+                </td>
+                <td th:text="${#temporals.format(o.created,'dd MMM HH:mm')}"></td>
+              <td>
+              <a class="fas fa-edit fa-2x icon-green" th:href="@{'/terminal/order/operate/' + ${o.id}}"></a>
+                    <a>
+                        <form th:object="${o}" th:method="delete" th:action="@{'/terminal/orders/delete/' + ${o.id}}">
+                            <button class="fas fa-trash fa-times p-2  rounded" type="submit"></button>
+                        </form>
+                    </a></td>
+                <td th:if="${o.employee != null}" th:text="*{employee.username}"></td>
+            </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+<div th:replace="fragments/common-terminal :: modal_dialog"></div>
+<footer th:replace="fragments/common::footer"></footer>
+
+<script language="javascript" type="text/javascript">
+    $(document).ready(function() {
+        setInterval("location.reload(true)", 300000);
+    });
+</script>
+</body>
+</html>

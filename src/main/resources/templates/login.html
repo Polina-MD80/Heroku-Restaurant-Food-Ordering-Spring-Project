@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+<header th:replace="fragments/common::navigation"></header>
+<br>
+<h2 style="text-align: center">Login</h2>
+
+<form th:action="@{/users/login}" method="post">
+<!--    <div class="imgcontainer">-->
+<!--        <img src="/images/restaurant-logo.png" alt="Logo" class="logo">-->
+<!--    </div>-->
+
+    <div class="container-contact">
+        <label for="uname"><b>Username</b></label><br>
+        <input th:value="${username}" type="text" placeholder="Enter Username" style="text-align: center" id="uname" name="username" required>
+        <br>
+        <label for="psw"><b>Password</b></label><br>
+        <input type="password" placeholder="Enter Password" style="text-align: center" id="psw" name="password" required>
+        <br>
+        <button type="submit" class="loginbtn">Login</button>
+        <br>
+        <p th:if="${bad_credentials}" class="error-message">
+            Invalid username or password.
+        </p>
+        <label>
+            <input type="checkbox" checked="checked" name="remember"> Remember me
+        </label>
+    </div>
+
+    <div class="container-contact" style="background-color:#f1f1f1">
+        <p class="cnclbtn">
+            <button type="button" onclick="window.location.href='/'" class="cancelbtn">Cancel</button>
+        </p>
+        <!--    //TODO-->
+        <span class="psw">Forgot <a href="#">password?</a></span>
+    </div>
+    <div class="clearfix"></div>
+</form>
+
+<section th:replace="fragments/common::social"></section>
+<!-- social Section Ends Here -->
+<div class="clearfix"></div>
+<!-- footer Section Starts Here -->
+<footer th:replace="fragments/common::footer"></footer>
+
+</body>
+</html>

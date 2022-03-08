@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Restaurant Website</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</head>
+<head th:fragment="head-basic">
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Website</title>
+
+
+    <link rel="stylesheet" href="/css/style.css">
+
+
+</head>
+
+<body>
+
+
+<header th:fragment="nav">
+    <section th:fragment="navigation" class="navbar navbar-expand-lg">
+        <div class="container-contact">
+            <div class="logo">
+                <a th:href="@{/}" title="Logo">
+                    <img th:src="@{/images/restaurant-logo.png}" alt="Restaurant Logo" class="img-responsive">
+                </a>
+            </div>
+            <span>
+            <form th:method="get">
+                <label for="lang">
+                    <img th:src="#{flag}" style="width: 30px">
+                </label>
+                <select
+                        onchange="this.form.submit()"
+                        id="lang"
+                        name="lang">
+                    <option value="en_US" th:selected="${#locale.toString()} == 'en_US'">English</option>
+                    <option value="de_DE" th:selected="${#locale.toString()} == 'de_DE'">Deutsch</option>
+                    <option value="bg_BG" th:selected="${#locale.toString()} == 'bg_BG'">Български</option>
+                </select>
+            </form>
+            </span>
+
+            <div class="menu text-right" id="topNavbar">
+                <ul>
+                    <li sec:authorize="hasRole('EMPLOYEE')">
+                        <a href="/terminal">Terminal</a>
+                    </li>
+                    <li sec:authorize="hasRole('ADMIN')">
+                        <a href="/terminal">Terminal</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/}">Home</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/categories}">Categories</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/items/foods}">Foods</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/items/drinks}">Drinks</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/contacts}">Contact</a>
+                    </li>
+                    <li sec:authorize="!isAuthenticated()">
+                        <a th:href="@{/users/login}">Login</a>
+                    </li>
+
+                    <li sec:authorize="!isAuthenticated()">
+                        <a th:href="@{/users/register}">Register</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/cart}"><img class="cart" width="30px" high="30px"
+                                                   src="https://img.icons8.com/emoji/48/000000/shopping-cart-emoji.png"/></a>
+                    </li>
+                    <li sec:authorize="isAuthenticated()">
+                        <form th:action="@{/users/logout}" th:method="post"><a style="color: #ee3322">
+                            <span sec:authorize="isAuthenticated()" th:text="#{greeting}"></span>
+                            <th:span sec:authentication="name"></th:span>
+                            ! </a>
+                            <input class="btn btn-link" style="color: darkmagenta;" type="submit" value="Logout">
+                        </form>
+
+                    </li>
+
+
+                </ul>
+            </div>
+
+            <div class="clearfix"></div>
+        </div>
+    </section>
+
+
+    <section class="food-search text-right">
+        <div class="container-contact">
+
+            <form th:action="@{/items/search}">
+                <input th:value="${keyword}" type="search" id="keyword" name="keyword" placeholder="Search for Food.."
+                       required>
+                <input type="submit" name="submit" value="Search" class="btn btn-primary">
+            </form>
+
+        </div>
+    </section>
+
+</header>
+
+
+<section class="categories" th:fragment="categories">
+    <div class="container-contact">
+        <h2 class="text-center">Explore Menu</h2>
+
+        <a th:href="@{/items/foods}">
+            <div class="box-3 float-container">
+                <img src="/images/food.jpg" alt="Food" class="img-responsive img-curve">
+
+                <h3 class="float-text text-white">FOOD</h3>
+            </div>
+        </a>
+
+        <a th:href="@{/items/drinks}">
+            <div class="box-3 float-container">
+                <img src="/images/drinks.jpg" alt="Drinks" class="img-responsive img-curve">
+
+                <h3 class="float-text text-white">DRINKS</h3>
+            </div>
+        </a>
+
+        <a th:href="@{/items/others}">
+            <div class="box-3 float-container">
+                <img src="/images/forks.jpg" alt="Other" class="img-responsive img-curve">
+
+                <h3 class="float-text text-white">OTHER</h3>
+            </div>
+        </a>
+
+        <div class="clearfix"></div>
+    </div>
+</section>
+
+
+<div th:fragment="quantity_control(quantityValue,itemId)">
+    <div>
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link linkMinus" th:iid="${itemId}" href=""><b>-</b></a>
+            </li>
+            <li class="page-item">
+                <input type="text" th:value="${quantityValue}" th:id="'quantity' + ${itemId}"
+                       onkeydown="return false;"
+                       class="form-control text-center" style="width: 55px"/>
+            </li>
+            <li class="page-item">
+                <a class="page-link linkPlus" th:iid="${itemId}" href=""><b>+</b></a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+
+
+<div th:fragment="item_box(allItems)">
+    <div th:each="i : ${allItems}" th:object="${i}" class="food-menu-box">
+
+        <div class="food-menu-img">
+            <img th:src="*{picture.getUrl()}" alt="No Image" th:height="150px" th:width="200px"
+                 class="img-responsive img-curve">
+        </div>
+
+        <div class="food-menu-desc">
+            <h4 th:text="*{name}">Food Title</h4>
+            <p class="food-price" th:text="*{price}">$2.3</p>
+            <p class="food-detail" th:text="*{toString()}">
+                Made with Italian Sauce, Chicken, ....
+            </p>
+            <span class="food-detail" th:each="a : ${i.allergens}">
+                    <img th:src="${a}" alt="no image" width="20px" high="20px" img>
+                </span>
+            <br>
+            <div class="select-item">
+                <th:block th:if="*{isActive()}">
+
+                    <div>
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link linkMinus" th:iid="${i.id}" href=""><b>-</b></a>
+                            </li>
+                            <li class="page-item">
+                                <input type="text" th:value="1" th:id="'quantity' + ${i.id}"
+                                       onkeydown="return false;"
+                                       class="form-control text-center" style="width: 55px"/>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link linkPlus" th:iid="${i.id}" href=""><b>+</b></a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <form th:class="orderForm" th:action="@{/cart/add/{iid}/(iid=${i.id})}" th:method="post">
+                        <input th:id="${'qty'+i.id}" th:name="qty" th:value="1" type="hidden"/>
+
+                        <input id="buttonAddToCart" type="submit" class="btn btn-primary" value="Order Now"
+                        />
+                    </form>
+                </th:block>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<section th:fragment="social" class="social">
+    <div class="container-contact text-center">
+        <ul>
+            <li>
+                <a href="https://www.facebook.com/poli.ip.5" target="_blank"><img
+                        src="https://img.icons8.com/fluent/50/000000/facebook-new.png"/></a>
+            </li>
+            <li>
+                <a href="https://www.instagram.com/poli_md80" target="_blank"><img
+                        src="https://img.icons8.com/fluent/48/000000/instagram-new.png"/></a>
+            </li>
+            <li>
+                <a href="https://twitter.com/ip_poli" target="_blank"><img
+                        src="https://img.icons8.com/fluent/48/000000/twitter.png"/></a>
+            </li>
+            <li>
+                <a href="mailto: restaurant@example.com" target="_blank"><img
+                        src="https://img.icons8.com/fluency/48/000000/apple-mail.png"/></a>
+            </li>
+            <li>
+                <a href="tel:0888888888"><img src="https://img.icons8.com/fluency/48/000000/ringing-phone.png"/></a>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<div th:fragment="modal_dialog" class="modal fade text-center" id="modalDialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">Warning</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <span id="modalBody"></span>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments :: modal_dialog"></div>
+<footer th:fragment="footer" class="footer">
+    <div class="container-contact text-center">
+        <p><span th:text="${#dates.year(#dates.createNow())}"> </span>
+            <span>&copy </span> Created by <a href="https://github.com/Polina-MD80" target="_blank">Poli IP</a></p>
+    </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/common::head"></head>
+
+<body>
+<!-- Navbar Section Starts Here -->
+<header th:replace="fragments/common::nav"></header>
+
+<section th:object="${allCategories}" class="food-menu">
+    <div class="container - container-contact">
+        <h2 class="text-center">All Categories</h2>
+
+        <div class="cat-menu-box" th:each="c: ${allCategories}" th:object="${c}" >
+            <a th:href="@{/categories/cat/{name}(name = *{name})}">
+
+                <div class="food-menu-img">
+                    <img th:src="*{picture.getUrl()}" alt="Picture Not Available"
+                      th:height="150px" th:width="150px"  class="img-responsive img-curve ">
+                </div>
+
+                <div class="food-menu-desc" >
+                    <h4 th:text="*{name}">Category Name</h4>
+
+                    <p th:text="*{description}" class="food-detail">
+                        No Description
+                    </p>
+                    <br>
+                    <div class="row">
+
+                    </div>
+                </div>
+
+            </a>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <p class="text-center">
+        <a href="/categories">See All Categories in Restaurant site</a>
+    </p>
+</section>
+<!-- CAtegories Section Starts Here -->
+
+<!-- Categories Section Ends Here -->
+<section th:replace="fragments/common :: categories"></section>
+
+<!-- social Section Starts Here -->
+<section th:replace="fragments/common::social"></section>
+<!-- social Section Ends Here -->
+<div class="clearfix"></div>
+<!-- footer Section Starts Here -->
+<footer th:replace="fragments/common::footer"></footer>
+
+
+<!-- footer Section Ends Here -->
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/common::head"></head>
+
+<body>
+<!-- Navbar Section Starts Here -->
+<header th:replace="fragments/common::nav"></header>
+
+<div>
+    <h2 >Your cart</h2>
+    <div th:if="${success != null}" th:text="${success}" id="success" th:success="${success}" class="alert alert-success text-center"></div>
+</div>
+<div class="row">
+    <div class="col-sm-1"></div>
+    <div class="col-sm-7">
+        <th:block th:each="detail, status : ${cartDetails}">
+            <div class="row border rounded" th:with="item = ${detail.item}" th:id="'row' + ${status.count}">
+                <div class="col-1">
+                    <div class="divCount">[[${status.count}]]</div>
+                    <div>
+                        <a class="linkRemove" th:rowNumber="${status.count}"
+                           th:href="@{'/cart/remove/' + ${item.id}}">remove</a>
+                    </div>
+                </div>
+                <div class="col">
+                    <img th:if="${item.picture!=null}" th:src="${item.picture.url}"  width="150px" height="150px"/>
+                    <img th:unless="${item.picture!=null}" th:src="${DEFAULT_IMAGE}"  width="150px" height="150px"/>
+                </div>
+                <div class="col">
+                    <div>
+                        <b th:text="${item.name}"></b>
+                    </div>
+                    <div th:text="${item.manufacturer}"></div>
+
+                    <div>
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link linkMinus" th:iid="${item.id}" href=""><b>-</b></a>
+                            </li>
+                            <li class="page-item">
+                                <input type="text" th:value="${detail.quantity}" th:id="'quantity' + ${item.id}"
+                                       onkeydown="return false;"
+                                       class="form-control text-center" style="width: 55px"/>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link linkPlus" th:iid="${item.id}" href=""><b>+</b></a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <span>X</span>
+                    <span th:text="${item.price}"></span>
+
+                    <div>
+                        <span>= </span><span th:id="'subtotal' + ${item.id}" class="h4 subtotal" th:text="${detail.getSubTotal()}"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row m-1" th:id="'blankLine' + ${status.count}">&nbsp;</div>
+        </th:block>
+    </div>
+
+    <div class="col-sm-4" th:unless="${#lists.isEmpty(cartDetails)}">
+        <div>
+            <span class="h3">Estimated Total: </span>
+        </div>
+        <div class="mt-2">
+            <span id="total" class="h2">[[${estimatedTotal}]]</span>
+        </div>
+        <form th:action="@{/order}">
+            <button type="submit" class="btn btn-danger p-3 mt-2">Place Order</button>
+        </form>
+
+    </div>
+
+</div>
+
+<div th:replace="fragments/common-terminal :: modal_dialog"></div>
+
+<div th:if="${#lists.isEmpty(cartDetails)}">
+    <h3 th:if="${ordered}"  style="color: #ee3322"> Thank you!<br>Your order has been placed successfully.<br>
+        An operator is just about to call you for confirmation details.</h3>
+    <h3 th:unless="${ordered}"  style="color: #ee3322">You have not chosen any food yet.</h3>
+</div>
+
+<!-- social Section Starts Here -->
+<section th:replace="fragments/common::social"></section>
+<!-- social Section Ends Here -->
+<div class="clearfix"></div>
+<!-- footer Section Starts Here -->
+<footer th:replace="fragments/common::footer"></footer>
+<!-- footer Section Ends Here -->
+<script type="text/javascript">
+    contextPath = "[[@{/}]]";
+    var csrfHeaderName = "[[${_csrf.headerName}]]";
+    var csrfValue = "[[${_csrf.token}]]";
+    var itemId = "[[@{i.id}]]";
+
+
+</script>
+<script type="text/javascript"  th:src="@{/js/jquery.number.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common_modal.js}"></script>
+
+<script type="text/javascript" th:src="@{/js/shopping_cart.js}"></script>
+
+</body>
+</html>
