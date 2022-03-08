@@ -24,7 +24,7 @@
 <script>
 
     $(document).ready(function showStats() {
-        fetch("http://localhost:8080/terminal/stats-call")
+        fetch("https://restaurant-food-ordering-app.herokuapp.com/terminal/stats-call")
             .then(response => response.json())
             .then(stat => {
                 let tableRow = '<tr>' +
