@@ -28,14 +28,14 @@ public class EmployeeController {
     }
 
 
-    @GetMapping("/terminal")
+    @GetMapping("terminal")
     public String employee(Model model) {
         model.addAttribute("orders", orderService.getAllOrders());
         return "terminal";
     }
 
 
-    @GetMapping("/terminal/order/operate/{id}")
+    @GetMapping("terminal/order/operate/{id}")
     public String operateOrder(@PathVariable Long id,
                                @AuthenticationPrincipal RestaurantUser user) {
         if (user == null) {
@@ -48,7 +48,7 @@ public class EmployeeController {
         return "redirect:/terminal";
     }
 
-    @GetMapping("/terminal/order/{id}")
+    @GetMapping("terminal/order/{id}")
     public String seeOrder(@PathVariable Long id,
                            Model model,
                            @AuthenticationPrincipal RestaurantUser user) {
@@ -67,7 +67,7 @@ public class EmployeeController {
     }
 
     @Scheduled(cron = "${schedulers.cron1}")
-    @GetMapping("/terminal/delete-on-schedule")
+    @GetMapping("terminal/delete-on-schedule")
     public void deleteFromOrders() {
         try {
             orderService.deleteAllOldOrders();
@@ -76,7 +76,7 @@ public class EmployeeController {
         }
     }
 
-    @DeleteMapping("/terminal/orders/delete/{id}")
+    @DeleteMapping("terminal/orders/delete/{id}")
     public String deleteOrder(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
 
         try {
