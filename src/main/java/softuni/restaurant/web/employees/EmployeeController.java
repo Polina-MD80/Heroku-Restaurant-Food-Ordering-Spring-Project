@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import softuni.restaurant.model.entity.UserEntity;
 import softuni.restaurant.service.OrderService;
@@ -17,6 +18,7 @@ import softuni.restaurant.service.impl.RestaurantUser;
 import softuni.restaurant.web.exception.ObjectNotFoundException;
 
 @Controller
+@RequestMapping("terminal")
 public class EmployeeController {
     private final OrderService orderService;
     private final UserService userService;
@@ -28,14 +30,14 @@ public class EmployeeController {
     }
 
 
-    @GetMapping("terminal")
+    @GetMapping
     public String employee(Model model) {
         model.addAttribute("orders", orderService.getAllOrders());
         return "terminal";
     }
 
 
-    @GetMapping("terminal/order/operate/{id}")
+    @GetMapping("order/operate/{id}")
     public String operateOrder(@PathVariable Long id,
                                @AuthenticationPrincipal RestaurantUser user) {
         if (user == null) {
@@ -48,7 +50,7 @@ public class EmployeeController {
         return "redirect:/terminal";
     }
 
-    @GetMapping("terminal/order/{id}")
+    @GetMapping("order/{id}")
     public String seeOrder(@PathVariable Long id,
                            Model model,
                            @AuthenticationPrincipal RestaurantUser user) {
@@ -67,7 +69,7 @@ public class EmployeeController {
     }
 
     @Scheduled(cron = "${schedulers.cron1}")
-    @GetMapping("terminal/delete-on-schedule")
+    @GetMapping("delete-on-schedule")
     public void deleteFromOrders() {
         try {
             orderService.deleteAllOldOrders();
@@ -76,7 +78,7 @@ public class EmployeeController {
         }
     }
 
-    @DeleteMapping("terminal/orders/delete/{id}")
+    @DeleteMapping("orders/delete/{id}")
     public String deleteOrder(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
 
         try {
