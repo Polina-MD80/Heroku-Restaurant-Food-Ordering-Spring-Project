@@ -1,5 +1,7 @@
 Beginners level
 
+Deployed on https://restaurant-ip.herokuapp.com
+
 An online food ordering platform, that can be used from many stations, 
 from many customers.
 The Customer can choose and place order.
